@@ -76,7 +76,7 @@ def basic_eda(df, n=5, describe=True):
 <img width="1366" height="768" alt="Screenshot 2025-10-17 112811" src="https://github.com/user-attachments/assets/e56f730f-a4cf-4b7a-a752-cbf85fe37282" />
 <img width="1366" height="768" alt="Screenshot 2025-10-17 112818" src="https://github.com/user-attachments/assets/4285a2f7-8094-4f0c-8fbc-0504470f2cde" />
 <img width="1366" height="768" alt="Screenshot 2025-10-17 112822" src="https://github.com/user-attachments/assets/610bc96c-9a36-4f48-b6d2-eb745d9a73ff" />
-
+```
 
 
 
@@ -90,7 +90,7 @@ def basic_eda(df, n=5, describe=True):
 
 <img width="1366" height="768" alt="Screenshot 2025-10-17 113054" src="https://github.com/user-attachments/assets/be7c8259-b0d7-48ee-97cf-d3e64e8f7349" />
 
-```
+
 
 # Result
           The code is executed successfully.
