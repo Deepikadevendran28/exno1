@@ -71,12 +71,12 @@ def basic_eda(df, n=5, describe=True):
        # Call load_csv to create the df variable
       df = load_csv(path='Data_set (2).csv'
       basic_eda(df, n=5)
-
+```
 <img width="1366" height="768" alt="Screenshot 2025-10-17 112802" src="https://github.com/user-attachments/assets/7f329930-f14b-4818-83ac-914a4c0093de" />
 <img width="1366" height="768" alt="Screenshot 2025-10-17 112811" src="https://github.com/user-attachments/assets/e56f730f-a4cf-4b7a-a752-cbf85fe37282" />
 <img width="1366" height="768" alt="Screenshot 2025-10-17 112818" src="https://github.com/user-attachments/assets/4285a2f7-8094-4f0c-8fbc-0504470f2cde" />
 <img width="1366" height="768" alt="Screenshot 2025-10-17 112822" src="https://github.com/user-attachments/assets/610bc96c-9a36-4f48-b6d2-eb745d9a73ff" />
-```
+
 
 
 
