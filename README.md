@@ -1,4 +1,4 @@
-# Exno:1
+<img width="830" height="576" alt="image" src="https://github.com/user-attachments/assets/67b81c2d-a797-41e0-987b-c7f9be1a8e01" /># Exno:1
 Data Cleaning Process
 
 # AIM
@@ -23,73 +23,89 @@ STEP 6: Use zscore of to remove outliers
 # Coding and Output
 ```
 import pandas as pd
-from IPython.display import display
-from google.colab import files
+import numpy as np
+from scipy import stats
 
-uploaded = files.upload()
+# Function to display initial information about the dataset
+def initial_data_info(df):
+    print("Info:")
+    print(df.info())
+    print("\nDescribe:")
+    print(df.describe())
+    print("\nNull values per column:")
+    print(df.isnull().sum())
+    print('=' * 40)
 
-for fn in uploaded.keys():
-  print('User uploaded file "{name}" with length {length} bytes'.format(
-      name=fn, length=len(uploaded[fn])))
+# Function to remove null values
+def remove_nulls(df):
+    return df.dropna()
 
-def load_csv(path='Data_set.csv', **read_csv_kwargs):
-    """Load CSV and return DataFrame."""
-    df = pd.read_csv(path, **read_csv_kwargs)
-    print(f"Loaded '{path}' — shape: {df.shape}")
+# Function to remove outliers using the IQR method
+def remove_outliers_iqr(df, columns):
+    for col in columns:
+        Q1 = df[col].quantile(0.25)
+        Q3 = df[col].quantile(0.75)
+        IQR = Q3 - Q1
+        lower = Q1 - 1.5 * IQR
+        upper = Q3 + 1.5 * IQR
+        df = df[(df[col] >= lower) & (df[col] <= upper)]
     return df
 
-def basic_eda(df, n=5, describe=True):
-    """Display basic info & quick analysis for DataFrame `df`."""
-    print("HEAD:")
-    display(df.head(n))
+# Function to remove outliers using the Z-score method
+def remove_outliers_zscore(df, columns, thresh=3):
+    for col in columns:
+        z = np.abs(stats.zscore(df[col].dropna()))
+        filtered_entries = (z < thresh)
+        valid_indices = df[col].dropna().index[filtered_entries]
+        df = df.loc[valid_indices]
+    return df
 
-    print("TAIL:")
-    display(df.tail(n))
+# List of dataset filenames
+file_names = [
+    "Data_set.csv",
+    "heights.csv",
+    "iris.csv",
+    "Loan_data.csv",
+    "SAMPLEIDS (1).csv"
+]
 
-    print("SHAPE:", df.shape)
-
-    print("\nDTYPES:")
-    print(df.dtypes)
-
-    print("\nINFO:")
-    df.info()
-
-    print("\nMISSING VALUES (per column):")
-    display(df.isnull().sum())
-
-    if describe:
-        print("\nDESCRIBE (all columns):")
-        display(df.describe(include='all').transpose())
-
-    print("\nNUMERIC CORRELATION (pearson):")
-    display(df.select_dtypes(include=['number']).corr())
-
-    print("\nTOP VALUES FOR NON-NUMERIC COLUMNS:")
-    for col in df.select_dtypes(exclude=['number']).columns:
-        print(f"  {col}:")
-        display(df[col].value_counts(dropna=False).head(10))
-       # Call load_csv to create the df variable
-      df = load_csv(path='Data_set (2).csv'
-      basic_eda(df, n=5)
+# Process each file one by one
+for file in file_names:
+    print(f'Processing file: {file}')
+    df = pd.read_csv(file)
+    
+    print("Initial Info")
+    initial_data_info(df)
+    
+    # Remove nulls
+    df_no_nulls = remove_nulls(df)
+    print("After Removing Nulls:")
+    print(df_no_nulls.shape)
+    
+    # Select numeric columns
+    numeric_cols = df_no_nulls.select_dtypes(include=[np.number]).columns.tolist()
+    
+    # Remove outliers using IQR method
+    df_iqr = remove_outliers_iqr(df_no_nulls.copy(), numeric_cols)
+    print("After Removing Outliers (IQR method):", df_iqr.shape)
+    
+    # Remove outliers using Z-score method
+    df_z = remove_outliers_zscore(df_no_nulls.copy(), numeric_cols)
+    print("After Removing Outliers (Z-score method):", df_z.shape)
+    
+    print('=' * 80)
 ```
-<img width="1366" height="768" alt="Screenshot 2025-10-17 112802" src="https://github.com/user-attachments/assets/7f329930-f14b-4818-83ac-914a4c0093de" />
-<img width="1366" height="768" alt="Screenshot 2025-10-17 112811" src="https://github.com/user-attachments/assets/e56f730f-a4cf-4b7a-a752-cbf85fe37282" />
-<img width="1366" height="768" alt="Screenshot 2025-10-17 112818" src="https://github.com/user-attachments/assets/4285a2f7-8094-4f0c-8fbc-0504470f2cde" />
-<img width="1366" height="768" alt="Screenshot 2025-10-17 112822" src="https://github.com/user-attachments/assets/610bc96c-9a36-4f48-b6d2-eb745d9a73ff" />
 
 
 
-
-
-
-<img width="1366" height="768" alt="Screenshot 2025-10-17 113037" src="https://github.com/user-attachments/assets/6d6b9ea5-7aea-40ac-86e6-e8c1ff3d5019" />
-
-<img width="1366" height="768" alt="Screenshot 2025-10-17 113042" src="https://github.com/user-attachments/assets/e7683b66-29f7-4f5a-b889-57816d20f0f1" />
-
-<img width="1366" height="768" alt="Screenshot 2025-10-17 113047" src="https://github.com/user-attachments/assets/a706bd66-e690-4015-a688-975706155b01" />
-
-<img width="1366" height="768" alt="Screenshot 2025-10-17 113054" src="https://github.com/user-attachments/assets/be7c8259-b0d7-48ee-97cf-d3e64e8f7349" />
-
+<img width="470" height="559" alt="Screenshot 2025-10-21 112036" src="https://github.com/user-attachments/assets/634ebc38-5947-49f8-a2af-b7d0e7e65f3c" />
+<img width="721" height="594" alt="Screenshot 2025-10-21 112056" src="https://github.com/user-attachments/assets/561bd002-7e24-4528-9fb4-be5dc99e05c1" />
+<img width="539" height="598" alt="Screenshot 2025-10-21 112113" src="https://github.com/user-attachments/assets/8ac7353d-dbe9-437f-8fdb-e0659375fc45" />
+<img width="578" height="594" alt="Screenshot 2025-10-21 112139" src="https://github.com/user-attachments/assets/8aebecae-f0d6-4409-87c4-44c426d444e4" />
+<img width="591" height="587" alt="Screenshot 2025-10-21 112204" src="https://github.com/user-attachments/assets/cb6aac74-0d17-473f-b8f4-56944f4c3bda" />
+<img width="625" height="590" alt="Screenshot 2025-10-21 112218" src="https://github.com/user-attachments/assets/1045f662-0fcd-4ab3-b9ca-5c07f1c534d7" />
+<img width="627" height="592" alt="Screenshot 2025-10-21 112232" src="https://github.com/user-attachments/assets/ee3e51df-7f03-4b62-8593-96a2852dd9c4" />
+<img width="830" height="576" alt="Screenshot 2025-10-21 112243" src="https://github.com/user-attachments/assets/4de7fb7b-6149-4e31-ba7e-ffb53987a3ba" />
 
 
 # Result
